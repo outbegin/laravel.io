@@ -35,6 +35,17 @@ final class Reply extends Model
 
     protected $appends = ['likes_count'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saved(function ($model) {
+            if($model->replyAbleRelation instanceof Thread) {
+                $model->replyAbleRelation->searchable();
+            }
+        });
+    }
+
     public function id(): int
     {
         return $this->id;

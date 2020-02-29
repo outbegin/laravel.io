@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 use Spatie\Feed\Feedable;
 use Spatie\Feed\FeedItem;
 
@@ -34,6 +35,7 @@ final class Thread extends Model implements ReplyAble, SubscriptionAble, Feedabl
     use ModelHelpers;
     use ProvidesSubscriptions;
     use ReceivesReplies;
+    use Searchable;
 
     const TABLE = 'threads';
 
@@ -206,5 +208,18 @@ final class Thread extends Model implements ReplyAble, SubscriptionAble, Feedabl
         return static::feedQuery()
             ->paginate(static::FEED_PAGE_SIZE)
             ->getCollection();
+    }
+
+    public function toSearchableArray(): array
+    {
+        $searchableArray = $this->transform($this->toArray());
+
+        $searchableArray['replies'] = $this->replies()->map(function ($reply) {
+            return $reply['body'];
+        })->toArray();
+
+        $searchableArray['url'] = route('thread', $this->slug());
+
+        return $searchableArray;
     }
 }

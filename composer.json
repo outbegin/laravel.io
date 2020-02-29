@@ -5,6 +5,7 @@
     "type": "project",
     "require": {
         "php": "^7.3",
+        "algolia/scout-extended": "^1.8",
         "doctrine/dbal": "^2.5",
         "facade/ignition": "^1.0",
         "fideloper/proxy": "^4.0",
