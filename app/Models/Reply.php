@@ -40,7 +40,7 @@ final class Reply extends Model
         parent::boot();
 
         static::saved(function ($model) {
-            if($model->replyAbleRelation instanceof Thread) {
+            if ($model->replyAbleRelation instanceof Thread) {
                 $model->replyAbleRelation->searchable();
             }
         });
